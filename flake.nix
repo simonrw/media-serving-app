@@ -21,7 +21,10 @@
 
           empty = pkgs.mkShell {
             buildInputs = with pkgs; [
+              python39
+              python39.pkgs.venvShellHook
             ];
+            venvDir = ".venv";
           };
         };
       }
