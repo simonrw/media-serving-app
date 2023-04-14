@@ -23,12 +23,15 @@ aws-sam-translator==1.64.0
     # via
     #   aws-sam-cli
     #   cfn-lint
+awscli-local==0.20
+    # via -r requirements.in
 binaryornot==0.4.4
     # via cookiecutter
 boto3==1.26.114
     # via
     #   aws-sam-cli
     #   aws-sam-translator
+    #   localstack-client
     #   serverlessrepo
 botocore==1.29.114
     # via
@@ -91,6 +94,8 @@ jsonschema==4.17.3
     #   cfn-lint
 junit-xml==1.9
     # via cfn-lint
+localstack-client==2.0
+    # via awscli-local
 markupsafe==2.1.2
     # via
     #   jinja2
