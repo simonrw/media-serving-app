@@ -7,6 +7,6 @@ deploy-graphql-api:
 	make -C graphql-api deploy
 
 .PHONY: deploy-data-store
-deploy-data-store:
+deploy-data-store: deploy-graphql-api
 	make -C data-store deploy
 

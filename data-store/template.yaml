@@ -27,3 +27,13 @@ Resources:
       Name: /global/dataStoreTableArn
       Type: String
       Value: !GetAttr Table.Arn
+
+  GraphQLDataSource:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId: "{{resolve:ssm:/global/apiId}}"
+      DynamoDBConfig:
+        TableName: !Ref Table
+        AwsRegion: !Ref AWS::Region
+      Type: AMAZON_DYNAMODB
+      Name: dynamodbds
