@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  graphql-api
+
+  Sample SAM Template for graphql-api
+
+Resources:
+  Api:
+    Type: AWS::AppSync::GraphQLApi
+
+  Schema:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      DefinitionS3Location: ./schema.graphql
+      Name: api
+      AuthenticationType: API_KEY
+
+  ApiKey:
+    Type: AWS::AppSync::ApiKey
+    Properties:
+      ApiId: !GetAttr Api.ApiId
+
+  ApiIdParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /global/api-id
+      Value: !GetAttr Api.ApiId
+
+Outputs:
+  ApiId:
+    Value: !GetAttr Api.ApiId
