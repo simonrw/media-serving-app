@@ -2,12 +2,13 @@
 
 set -euo pipefail
 
+MOVIE_URL=https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4
 MOVIE_PATH=bunny.mp4
 OUTPUT_PATH=out.mp4
 
 fetch_raw_movie() {
     if [ ! -f "$MOVIE_PATH" ]; then
-        curl -Lo "$MOVIE_PATH" https://download.blender.org/demo/movies/BBB/bbb_sunflower_1080p_60fps_normal.mp4
+        curl -Lo "$MOVIE_PATH" "${MOVIE_URL}"
     fi
 }
 
@@ -39,7 +40,7 @@ postprocess() {
 }
 
 clean() {
-    find . -type f | grep -v package.sh | grep -v $MOVIE_PATH | while read file_path; do
+    find . -type f | grep -v package.sh | grep -v $MOVIE_PATH | grep -v .gitignore while read file_path; do
         rm -rf $file_path;
     done || true
 }
