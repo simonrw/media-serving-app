@@ -1,3 +1,7 @@
+.PHONY: help
+help:
+	@echo "Commands: dev, deploy-graphql-api, deploy-data-store"
+
 .PHONY: dev
 dev:
 	pip-sync *requirements.txt
