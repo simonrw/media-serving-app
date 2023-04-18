@@ -22,6 +22,7 @@
           empty = pkgs.mkShell {
             buildInputs = with pkgs; [
               python39
+              ffmpeg_5-full
               python39.pkgs.venvShellHook
             ];
             venvDir = ".venv";
