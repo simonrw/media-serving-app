@@ -1,3 +1,5 @@
 aws-sam-cli
 aws-sam-cli-local
 awscli-local
+boto3
+mypy_boto3_s3
