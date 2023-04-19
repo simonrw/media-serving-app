@@ -22,6 +22,7 @@ export default class Api extends Construct {
       runtime: lambda.Runtime.NODEJS_18_X,
       environment: {
         BUCKET_NAME: "videoondemand-destination920a3c57-c09363a3",
+        TABLE_NAME: props.table.tableName,
       },
     });
 

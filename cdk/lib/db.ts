@@ -1,5 +1,6 @@
 import { Construct } from "constructs";
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import { CfnOutput } from "aws-cdk-lib";
 
 export default class Database extends Construct {
   public readonly db: dynamodb.Table;
@@ -14,5 +15,8 @@ export default class Database extends Construct {
       },
     });
 
+    new CfnOutput(this, "tableName", {
+      value: this.db.tableName,
+    });
   }
 }
