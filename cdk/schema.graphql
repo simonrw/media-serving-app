@@ -1,9 +1,15 @@
 type Mutation {
-    register(id:ID!, type: String!): String!
+    register(id:ID!, name:String!, type: String!): String!
+}
+
+type Item {
+  id: String!
+  name: String!
+  url: String!
 }
 
 type Query {
-    _empty: String
+    fetchItems: [Item!]!
 }
 
 schema {

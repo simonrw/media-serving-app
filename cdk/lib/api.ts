@@ -32,6 +32,10 @@ export default class Api extends Construct {
       typeName: "Mutation",
       fieldName: "register",
     });
+    const listResolver = lambdaDS.createResolver("listresolver", {
+      typeName: "Query",
+      fieldName: "fetchItems",
+    });
 
 
     new CfnOutput(this, 'api-id', {

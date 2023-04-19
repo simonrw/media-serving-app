@@ -1,42 +1,12 @@
-const apiId = "e7fa16afb26f49fa8a38521fc2";
-const apiKey = "0c8a4964";
 const bucketName = "cdkstack-testbucket560b80bc-4c0079c2";
-
-
-const appsyncUrl = () => {
-  return `http://localhost:4566/graphql/${apiId}`;
-};
-
-const graphQLRequest = async (name, query, params) => {
-  const res = await fetch(appsyncUrl(), {
-    method: "POST",
-    headers: {
-      "X-API-Key": apiKey,
-    },
-    body: JSON.stringify({
-      query,
-      variables: params,
-      operationName: name,
-    }),
-  });
-
-  // TODO: check status code
-
-  const { data, errors } = await res.json();
-  if (errors) {
-    throw errors;
-  }
-
-  return data;
-};
 
 const registerItem = async (file) => {
   const id = window.uuid.v4();
   let { register: url } = await graphQLRequest(
     "RegisterItem",
     `
-    mutation RegisterItem($id:ID!, $type:String!) {
-      register(id: $id, type: $type)
+    mutation RegisterItem($id:ID!, $name:String!, $type:String!) {
+      register(id: $id, name: $name, type: $type)
     }
     `,
     { id, type: file.type }
