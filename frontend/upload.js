@@ -10,7 +10,7 @@ const registerItem = async (file) => {
     { id, name: file.name, type: file.type }
   );
 
-  return url.replace("172.17.0.2", "localhost.localstack.cloud");
+  return { id, url: url.replace("172.17.0.2", "localhost.localstack.cloud") };
 };
 
 const uploadFile = async (e) => {
@@ -26,7 +26,7 @@ const uploadFile = async (e) => {
   }
 
   const endpoint = new AWS.Endpoint("http://localhost.localstack.cloud:4566");
-  const url = await registerItem(file);
+  const { id, url } = await registerItem(file);
 
   await putObject(file, url);
 

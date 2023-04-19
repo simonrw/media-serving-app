@@ -19,7 +19,7 @@ const createUrl = async (key: string, fileType: string): Promise<string> => {
   return rawUrl.replace("172.17.0.2", "localhost.localstack.cloud").replace(bucket, "s3").replace(":4566/", `:4566/${bucket}/`);
 };
 
-const saveItem = async (id: string) => {
+const saveItem = async (id: string, name: string) => {
   console.log("Saving item");
   const client = new dynamodb.DynamoDBClient({ region: "us-east-1", endpoint: endpointUrl });
   const command = new dynamodb.PutItemCommand({
@@ -27,6 +27,9 @@ const saveItem = async (id: string) => {
     Item: {
       pk: {
         S: id,
+      },
+      name: {
+        S: name,
       },
       "bucket": {
         S: bucket!,
@@ -61,8 +64,8 @@ exports.handler = async function(event: Event, context: any) {
   if (fieldName === "register") {
     const { id, name, type: fileType } = variables;
     console.log("id", id);
-    const url = await createUrl(`id/${name}`, fileType);
-    await saveItem(id);
+    const url = await createUrl(`${id}/${name}`, fileType);
+    await saveItem(id, name);
     console.log("Finished", url);
     return url;
   } else {
