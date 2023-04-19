@@ -9,7 +9,9 @@ export class CdkStack extends cdk.Stack {
 
     // The code that defines your stack goes here
 
-    const api = new Api(this, "Api");
     const db = new Database(this, "Database");
+    const api = new Api(this, "Api", {
+      table: db.db,
+    });
   }
 }
