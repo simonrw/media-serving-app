@@ -20,6 +20,9 @@ export default class Api extends Construct {
 
     const registerFunction = new NodejsFunction(this, "registerFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
+      environment: {
+        BUCKET_NAME: "videoondemand-destination920a3c57-c09363a3",
+      },
     });
 
     const lambdaDS = api.addLambdaDataSource("registerds", registerFunction);
