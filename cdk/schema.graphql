@@ -1,5 +1,5 @@
 type Mutation {
-    register(id:ID!): String!
+    register(id:ID!, type: String!): String!
 }
 
 type Query {

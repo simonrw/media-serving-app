@@ -6,12 +6,14 @@ const bucket = process.env.BUCKET_NAME;
 const tableName = process.env.TABLE_NAME;
 const endpointUrl = "http://172.17.0.2:4566";
 
-const createUrl = async (key: string): Promise<string> => {
+const createUrl = async (key: string, fileType: string): Promise<string> => {
   console.log("Creating presigned url");
-  const client = new s3.S3Client({ region: "us-east-1", endpoint: endpointUrl});
+  const client = new s3.S3Client({ region: "us-east-1", endpoint: endpointUrl });
   const command = new s3.PutObjectCommand({
     Key: key,
     Bucket: bucket,
+    ACL: "public-read",
+    ContentType: fileType,
   });
   return await getSignedUrl(client, command, { expiresIn: 3600 });
 };
@@ -34,7 +36,8 @@ const saveItem = async (id: string) => {
 }
 
 interface EventInfoVariables {
-  id: string
+  id: string,
+  type: string
 }
 
 interface EventInfo {
@@ -49,9 +52,9 @@ exports.handler = async function(event: Event, context: any) {
   console.log("Event", event);
   console.log("Table name", tableName);
   console.log("Bucket", bucket);
-  const id = event.info.variables.id;
+  const { id, type: fileType } = event.info.variables;
   console.log("id", id);
-  const url = await createUrl(id);
+  const url = await createUrl(id, fileType);
   await saveItem(id);
   console.log("Finished", url);
   return url;

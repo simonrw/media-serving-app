@@ -7,6 +7,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 
 export interface ApiProps {
   table: ITable,
+  bucketName: string,
 }
 
 export default class Api extends Construct {
@@ -21,7 +22,7 @@ export default class Api extends Construct {
     const registerFunction = new NodejsFunction(this, "registerFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
       environment: {
-        BUCKET_NAME: "videoondemand-destination920a3c57-c09363a3",
+        BUCKET_NAME: props.bucketName,
         TABLE_NAME: props.table.tableName,
       },
     });
