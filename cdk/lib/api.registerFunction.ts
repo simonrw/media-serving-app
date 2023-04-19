@@ -2,8 +2,8 @@ import * as dynamodb from "@aws-sdk/client-dynamodb";
 import * as s3 from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-const bucket = process.env.BUCKET_NAME;
-const tableName = process.env.TABLE_NAME;
+const bucket = process.env.BUCKET_NAME!;
+const tableName = process.env.TABLE_NAME!;
 const endpointUrl = "http://172.17.0.2:4566";
 
 const createUrl = async (key: string, fileType: string): Promise<string> => {
@@ -15,7 +15,8 @@ const createUrl = async (key: string, fileType: string): Promise<string> => {
     ACL: "public-read",
     ContentType: fileType,
   });
-  return await getSignedUrl(client, command, { expiresIn: 3600 });
+  const rawUrl = await getSignedUrl(client, command, { expiresIn: 3600 });
+  return rawUrl.replace("172.17.0.2", "localhost.localstack.cloud").replace(bucket, "s3").replace(":4566/", `:4566/${bucket}/`);
 };
 
 const saveItem = async (id: string) => {
@@ -37,11 +38,13 @@ const saveItem = async (id: string) => {
 
 interface EventInfoVariables {
   id: string,
+  name: string,
   type: string
 }
 
 interface EventInfo {
   parentTypeName: string,
+  fieldName: string,
   variables: EventInfoVariables,
 }
 
@@ -54,11 +57,11 @@ exports.handler = async function(event: Event, context: any) {
   console.log("Table name", tableName);
   console.log("Bucket", bucket);
 
-  const { parentTypeName, variables } = event.info;
-  if (parentTypeName === "Mutation") {
-    const { id, type: fileType } = variables;
+  const { fieldName, variables } = event.info;
+  if (fieldName === "register") {
+    const { id, name, type: fileType } = variables;
     console.log("id", id);
-    const url = await createUrl(id, fileType);
+    const url = await createUrl(`id/${name}`, fileType);
     await saveItem(id);
     console.log("Finished", url);
     return url;

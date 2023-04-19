@@ -1,5 +1,6 @@
-const apiId = "e7fa16afb26f49fa8a38521fc2";
-const apiKey = "0c8a4964";
+const apiId = "25b9ccbf8ada43bdaac769bb26";
+const apiKey = "3cfb7503";
+const bucketName = "cdkstack-testbucket560b80bc-7664ed50";
 
 const appsyncUrl = () => {
   return `http://localhost:4566/graphql/${apiId}`;

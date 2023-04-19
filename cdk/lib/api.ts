@@ -27,12 +27,13 @@ export default class Api extends Construct {
       },
     });
 
-    const lambdaDS = api.addLambdaDataSource("registerds", registerFunction);
-    const registerResolver = lambdaDS.createResolver("registerresolver", {
+    const registerDS = api.addLambdaDataSource("registerds", registerFunction);
+    registerDS.createResolver("registerresolver", {
       typeName: "Mutation",
       fieldName: "register",
     });
-    const listResolver = lambdaDS.createResolver("listresolver", {
+    const listDS = api.addLambdaDataSource("listds", registerFunction);
+    listDS.createResolver("listresolver", {
       typeName: "Query",
       fieldName: "fetchItems",
     });
