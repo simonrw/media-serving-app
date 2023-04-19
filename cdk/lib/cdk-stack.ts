@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
 import Database from './db';
 import Api from "./api";
@@ -11,14 +12,18 @@ export class CdkStack extends cdk.Stack {
 
     // The code that defines your stack goes here
 
-    const testBucket = new Bucket(this, "TestBucket", {});
+    const sourceBucketName = ssm.StringParameter.valueForStringParameter(
+      this, '/sourceBucketName');
+    const destBucketName = ssm.StringParameter.valueForStringParameter(
+      this, '/destinationBucketName');
+
     const db = new Database(this, "Database");
     const api = new Api(this, "Api", {
       table: db.db,
-      bucketName: testBucket.bucketName,
+      bucketName: sourceBucketName,
     });
-    new CfnOutput(this, "bucketName", {
-      value: testBucket.bucketName,
+    new CfnOutput(this, "sourceBucketName", {
+      value: sourceBucketName,
     });
   }
 }
