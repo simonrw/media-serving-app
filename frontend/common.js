@@ -1,6 +1,6 @@
-const apiId = "25b9ccbf8ada43bdaac769bb26";
-const apiKey = "3cfb7503";
-const bucketName = "cdkstack-testbucket560b80bc-7664ed50";
+const apiId = "092ff22d9c22406bb2599a973a";
+const apiKey = "f5a341ac";
+const bucketName = "videoondemand-source71e471f1-17514202";
 
 const appsyncUrl = () => {
   return `http://localhost:4566/graphql/${apiId}`;

@@ -48,6 +48,7 @@ const loadVideo = (e) => {
   videoElem.id = "current-video";
   videoElem.controls = true;
   videoElem.autoplay = true;
+  videoElem.muted = true;
   videoElem.width = 640;
 
   const parent = document.getElementById("player-space");

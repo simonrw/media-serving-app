@@ -2,9 +2,11 @@ import * as dynamodb from "@aws-sdk/client-dynamodb";
 import * as s3 from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
+const LS_IP_ADDRESS = "172.27.0.2";
+
 const bucket = process.env.BUCKET_NAME!;
 const tableName = process.env.TABLE_NAME!;
-const endpointUrl = "http://172.17.0.2:4566";
+const endpointUrl = `http://localhost.localstack.cloud:4566`;
 
 const createUrl = async (key: string, fileType: string): Promise<string> => {
   console.log("Creating presigned url");
@@ -16,7 +18,7 @@ const createUrl = async (key: string, fileType: string): Promise<string> => {
     ContentType: fileType,
   });
   const rawUrl = await getSignedUrl(client, command, { expiresIn: 3600 });
-  return rawUrl.replace("172.17.0.2", "localhost.localstack.cloud").replace(bucket, "s3").replace(":4566/", `:4566/${bucket}/`);
+  return rawUrl.replace(LS_IP_ADDRESS, "localhost.localstack.cloud").replace(bucket, "s3").replace(":4566/", `:4566/${bucket}/`);
 };
 
 const saveItem = async (id: string, name: string) => {
