@@ -4,7 +4,29 @@ import argparse
 import boto3
 from pathlib import Path
 from mypy_boto3_s3 import S3Client
-from typing import cast
+from concurrent.futures import ThreadPoolExecutor
+from typing import cast, Iterable
+
+
+def upload_in_parallel(
+    files: Iterable[Path], root: Path, client: S3Client, key: str, bucket: str
+) -> None:
+    def upload(file: Path):
+        if not file.is_file():
+            return
+        if not ("stream_" in str(file) or "m3u8" in str(file)):
+            return
+
+        relpath = file.relative_to(root)
+        full_key = f"{key}/{relpath}"
+
+        print(str(relpath))
+        with file.open("rb") as infile:
+            client.put_object(Bucket=bucket, Key=full_key, Body=infile)
+
+    with ThreadPoolExecutor() as pool:
+        list(pool.map(upload, files))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -19,15 +41,5 @@ if __name__ == "__main__":
     )
 
     root: Path = args.source
-    for file in root.glob("**/*"):
-        if not file.is_file():
-            continue
-        if not ("stream_" in str(file) or "m3u8" in str(file)):
-            continue
-
-        relpath = file.relative_to(root)
-        full_key = f"{args.key}/{relpath}"
-
-        print(str(relpath))
-        with file.open("rb") as infile:
-            client.put_object(Bucket=args.bucket, Key=full_key, Body=infile)
+    files = root.glob("**/*")
+    upload_in_parallel(files, root, client, args.key, args.bucket)
