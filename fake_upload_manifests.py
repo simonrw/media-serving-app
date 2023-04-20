@@ -4,6 +4,7 @@ import argparse
 import boto3
 from pathlib import Path
 from mypy_boto3_s3 import S3Client
+from typing import cast
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -12,7 +13,10 @@ if __name__ == "__main__":
     parser.add_argument("source", type=Path)
     args = parser.parse_args()
 
-    client: S3Client = boto3.client("s3", endpoint_url="http://localhost.localstack.cloud:4566")
+    client = cast(
+        S3Client,
+        boto3.client("s3", endpoint_url="http://localhost.localstack.cloud:4566"),
+    )
 
     root: Path = args.source
     for file in root.glob("**/*"):
@@ -26,7 +30,4 @@ if __name__ == "__main__":
 
         print(str(relpath))
         with file.open("rb") as infile:
-            client.put_object(
-                    Bucket=args.bucket,
-                    Key=full_key,
-                    Body=infile)
+            client.put_object(Bucket=args.bucket, Key=full_key, Body=infile)
